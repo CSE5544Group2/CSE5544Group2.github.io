@@ -82,7 +82,6 @@ path.arc {
 
 .node {
   font-size: 10px;
-  pointer-events: none;
 }
 
 .link {
@@ -288,35 +287,44 @@ d3.select(".display").remove();
 
           var nodes = cluster.nodes(json);
 
-  var link = vis.selectAll("path.link")
-      .data(cluster.links(nodes))
-    .enter().append("svg:path")
-      .attr("class", "link")
-      .attr("d", diagonal);
+	  var link = vis.selectAll("path.link")
+		  .data(cluster.links(nodes))
+		.enter().append("svg:path")
+		  .attr("class", "link")
+		  .attr("d", diagonal);
+		  
 
-  var node = vis.selectAll("g.node")
-      .data(nodes)
-    .enter().append("svg:g")
-      .attr("class", "node")
-      .attr("transform", function(d) { return "rotate(" + (d.x - 90) + ")translate(" + d.y + ")"; })
+	  var node = vis.selectAll("g.node")
+		  .data(nodes)
+		.enter().append("svg:g")
+		  .attr("class", "node")
+		  .attr("transform", function(d) { return "rotate(" + (d.x - 90) + ")translate(" + d.y + ")"; });
+	   
+		  
 
-  node.append("svg:circle")
-      .attr("r", 6)
-      .style("stroke", function(d){ 
-        return isAgent(d.name);
-      } );
+	  node.append("svg:circle")
+		  .attr("r", 6)
+		  .style("stroke", function(d){ 
+			return isAgent(d.name);
+		  } );
+		  
+		node
+	   .append("svg:title")
+	   .text(function(d) { if(d.children.length == 0) return "amount."; });
+		  
 
-  node.append("svg:text")
-      .attr("dx", function(d) { return d.x < 180 ? 8 : -8; })
-      .attr("dy", ".31em")
-      .attr("text-anchor", function(d) { return d.x < 180 ? "start" : "end"; })
-      .attr("transform", function(d) { return d.x < 180 ? null : "rotate(180)"; })
-      .text(function(d) { return d.name; });
-        //});
+	  node.append("svg:text")
+		  .attr("dx", function(d) { return d.x < 180 ? 8 : -8; })
+		  .attr("dy", ".31em")
+		  .attr("text-anchor", function(d) { return d.x < 180 ? "start" : "end"; })
+		  .attr("transform", function(d) { return d.x < 180 ? null : "rotate(180)"; })
+		  .text(function(d) { return d.name; });
+			//});
 
         d3.select(window)
             .on("mousemove", mousemove)
             .on("mouseup", mouseup);
+	
 
         function isAgent(name){
           for(var k in WordList.agents){
