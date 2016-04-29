@@ -97,11 +97,14 @@ path.arc {
       <h1>Recipe Visualizer</h1>
     <div>
       Ingredients<br>
-      <textarea name="ingredients" id="ingredients" rows="10" cols="40"></textarea>
+      <textarea name="ingredients" id="ingredients" rows="10" cols="40">1 cup A
+1 tbsp B</textarea>
     </div>
     <div>
       Recipe<br>
-      <textarea name = "steps" id = "steps" rows="15" cols="40"></textarea>
+      <textarea name = "steps" id = "steps" rows="15" cols="40">place A in bowl
+add B
+mash</textarea>
     </div><br>
     <button class = "graphButton" name= "run" onClick="run()">Create Graph --></button><br>
   </div>
@@ -182,19 +185,22 @@ function run(){
                 continue;
               for(j=1;j<line.length;j++)
               {
-                if(line[j] in listOfIngredients && objects.food.indexOf(line[j])==-1)
-                  objects.food.push(line[j]);
-                else if(line[j] in listOfIngredientsSub && objects.food.indexOf(listOfIngredientsSub[line[j]])==-1)
-                  objects.food.push(listOfIngredientsSub[line[j]]);
-                else if(WordList.agents.indexOf(line[j].toLowerCase())!=-1 && objects.agent.indexOf(line[j])==-1)
-                          objects.agent.push(line[j]);
+                var target = line[j].toLowerCase();
+                if(target in listOfIngredients && objects.food.indexOf(target)==-1){
+                  objects.food.push(target);
+                }
+                else if(target in listOfIngredientsSub && objects.food.indexOf(listOfIngredientsSub[target])==-1)
+                  objects.food.push(listOfIngredientsSub[target]);
+                else if(WordList.agents.indexOf(target.toLowerCase())!=-1 && objects.agent.indexOf(target)==-1)
+                          objects.agent.push(target);
 
               }
               for(j=0;j<line.length;j++)
               {
-                if(WordList.actions.indexOf(line[j].toLowerCase())!=-1)
+                var target = line[j].toLowerCase();
+                if(WordList.actions.indexOf(target)!=-1)
                 {
-                  action = line[j]; break;
+                  action = target; break;
                 }
                           
               }
@@ -206,7 +212,7 @@ function run(){
           }
         
           ProcedureTree = buildTree(Procedure);
-    
+          
 
 function buildTree(procedure){
       tree = {};
@@ -282,8 +288,6 @@ d3.select(".display").remove();
 
         //d3.json("recipe.json", function(json) {
           json = ProcedureTree;
-
-          console.log(JSON.stringify(json));
 
           var nodes = cluster.nodes(json);
 

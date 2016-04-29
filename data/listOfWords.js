@@ -21,7 +21,8 @@ var WordList = {
       "saucepan",
       "skillet",
       "spatula",
-      "spoon"
+      "spoon",
+      "Dish"
    ],
    "actions":[
       "add",
