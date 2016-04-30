@@ -369,12 +369,7 @@ d3.select(".display").remove();
 		  .style("stroke", function(d){ 
 			return isAgent(d.name);
 		  } )
-      .style("stroke-width", "3");
-		  
-		node
-	   .append("svg:title")
-	   .text(function(d) { if(d.children.length == 0) return "amount."; });
-		  
+      .style("stroke-width", "3");		  
 
 	  node.append("svg:text")
 		  .attr("dx", function(d) { return d.x < 180 ? 8 : -8; })
