@@ -70,7 +70,7 @@ textarea{
 }
 
 path.arc {
-  cursor: move;
+  /*cursor: move;*/
   fill: #fff;
 }
 
@@ -90,6 +90,19 @@ path.arc {
   stroke-width: 1.5px;
 }
 
+div.tooltip { 
+    position: absolute;     
+    text-align: center;     
+/*    width: 60px;          
+    height: 28px;  */       
+    padding: 2px;       
+    font: 12px sans-serif;    
+    background: lightsteelblue; 
+    border: 0px;    
+    border-radius: 8px;     
+    pointer-events: none;     
+}
+
     </style>
   </head>
   <body >
@@ -97,13 +110,13 @@ path.arc {
       <h1>Recipe Visualizer</h1>
     <div>
       Ingredients<br>
-      <textarea name="ingredients" id="ingredients" rows="10" cols="40">1 cup A
-1 tbsp B</textarea>
+      <textarea name="ingredients" id="ingredients" rows="10" cols="40">1 potato
+1 tbsp parsley</textarea>
     </div>
     <div>
       Recipe<br>
-      <textarea name = "steps" id = "steps" rows="15" cols="40">place A in bowl
-add B
+      <textarea name = "steps" id = "steps" rows="15" cols="40">place potato in bowl
+add parsley
 mash</textarea>
     </div><br>
     <button class = "graphButton" name= "run" onClick="run()">Create Graph --></button><br>
@@ -111,9 +124,7 @@ mash</textarea>
 
     <div id="body">
       <div id="footer">
-        d3.layout.cluster
         <div class="hint">
-          drag the ring to rotate
         </div>
       </div>
     </div>
@@ -216,6 +227,7 @@ function run(){
 
 function buildTree(procedure){
       tree = {};
+      id = 0;
       for(i=0;i<procedure.length;i++)
       {
           if(procedure[i].action=='' || procedure[i].action==null)
@@ -232,15 +244,18 @@ function buildTree(procedure){
             {
               obj = {};
               obj.name = procedure[i].objects.food[j]; obj.children = [];
+              obj.id = "N" + id++;
               children.push(obj);
             }
             for(j=0;j<procedure[i].objects.agent.length;j++) 
              {
               obj = {};
               obj.name = procedure[i].objects.agent[j]; obj.children = [];
+              obj.id = "N" + id++;
               children.push(obj);
             }
             temp.children = children;
+            temp.id="N" + id++;
             tree = temp;
           
       }
@@ -249,6 +264,7 @@ function buildTree(procedure){
           temp = {};
           temp.name='Dish';
           temp.children = children;
+          temp.id="N" + id++;
           tree = temp;
       return tree;
     }
@@ -283,8 +299,8 @@ d3.select(".display").remove();
 
         vis.append("svg:path")
             .attr("class", "arc")
-            .attr("d", d3.svg.arc().innerRadius(ry - 120).outerRadius(ry).startAngle(0).endAngle(2 * Math.PI))
-            .on("mousedown", mousedown);
+            .attr("d", d3.svg.arc().innerRadius(ry - 120).outerRadius(ry).startAngle(0).endAngle(2 * Math.PI));
+            // .on("mousedown", mousedown)
 
         //d3.json("recipe.json", function(json) {
           json = ProcedureTree;
@@ -298,19 +314,56 @@ d3.select(".display").remove();
 		  .attr("d", diagonal);
 		  
 
+    var div = d3.select("body").append("div") 
+        .attr("class", "tooltip")       
+        .style("opacity", 0);
+
+
 	  var node = vis.selectAll("g.node")
 		  .data(nodes)
 		.enter().append("svg:g")
 		  .attr("class", "node")
-		  .attr("transform", function(d) { return "rotate(" + (d.x - 90) + ")translate(" + d.y + ")"; });
+      .attr("id", function(d){return d.id})
+		  .attr("transform", function(d) { return "rotate(" + (d.x - 90) + ")translate(" + d.y + ")"; })
+      .on("mouseover", function(d) {
+        if(isAgent(d.name)=="green"){
+            div.transition()    
+                .duration(200)    
+                .style("opacity", .9);    
+            div .html(d.name + "<br><img src=\"img/"+d.name+".jpg\" width=200>")  
+                .style("left", 400 + mouse(d3.event)[0] + "px")   
+                .style("top", 400 + mouse(d3.event)[1] + "px");  
+        }
+      })
+      .on("mouseout", function() {
+            div.transition()    
+                .duration(500)    
+                .style("opacity", 0); 
+      })
+      .on("click", function(d){
+        dim(d);
+      });
+
+      function dim(d){
+        svg.select("g#"+d.id+" circle")
+          .style("stroke", "grey");
+        svg.select("g#"+d.id+" text")
+          .style("fill", "grey");
+
+        if((d.children.length>0)){
+          for(var xx = 0;xx<d.children.length;xx++){
+            dim(d.children[xx]);
+          }
+        }
+      }
 	   
-		  
 
 	  node.append("svg:circle")
 		  .attr("r", 6)
 		  .style("stroke", function(d){ 
 			return isAgent(d.name);
-		  } );
+		  } )
+      .style("stroke-width", "3");
 		  
 		node
 	   .append("svg:title")
@@ -320,14 +373,15 @@ d3.select(".display").remove();
 	  node.append("svg:text")
 		  .attr("dx", function(d) { return d.x < 180 ? 8 : -8; })
 		  .attr("dy", ".31em")
+      .attr("font-size", "15px")
 		  .attr("text-anchor", function(d) { return d.x < 180 ? "start" : "end"; })
 		  .attr("transform", function(d) { return d.x < 180 ? null : "rotate(180)"; })
-		  .text(function(d) { return d.name; });
+		  .html(function(d) { return typeof listOfIngredients[d.name] === "undefined" ? d.name : d.name + " [" + listOfIngredients[d.name] + "]"; });
 			//});
 
-        d3.select(window)
-            .on("mousemove", mousemove)
-            .on("mouseup", mouseup);
+        // d3.select(window)
+        //     .on("mousemove", mousemove)
+        //     .on("mouseup", mouseup);
 	
 
         function isAgent(name){
@@ -346,55 +400,55 @@ d3.select(".display").remove();
           return [e.pageX - rx, e.pageY - ry];
         }
 
-        function mousedown() {
-          m0 = mouse(d3.event);
-          d3.event.preventDefault();
-        }
+        // function mousedown() {
+        //   m0 = mouse(d3.event);
+        //   d3.event.preventDefault();
+        // }
 
-        function mousemove() {
-          if (m0) {
-            var m1 = mouse(d3.event),
-                dm = Math.atan2(cross(m0, m1), dot(m0, m1)) * 180 / Math.PI,
-                tx = "translate3d(0," + (ry - rx) + "px,0)rotate3d(0,0,0," + dm + "deg)translate3d(0," + (rx - ry) + "px,0)";
-            svg
-                .style("-moz-transform", tx)
-                .style("-ms-transform", tx)
-                .style("-webkit-transform", tx);
-          }
-        }
+        // function mousemove() {
+        //   if (m0) {
+        //     var m1 = mouse(d3.event),
+        //         dm = Math.atan2(cross(m0, m1), dot(m0, m1)) * 180 / Math.PI,
+        //         tx = "translate3d(0," + (ry - rx) + "px,0)rotate3d(0,0,0," + dm + "deg)translate3d(0," + (rx - ry) + "px,0)";
+        //     svg
+        //         .style("-moz-transform", tx)
+        //         .style("-ms-transform", tx)
+        //         .style("-webkit-transform", tx);
+        //   }
+        // }
 
-        function mouseup() {
-          if (m0) {
-            var m1 = mouse(d3.event),
-                dm = Math.atan2(cross(m0, m1), dot(m0, m1)) * 180 / Math.PI,
-                tx = "rotate3d(0,0,0,0deg)";
+        // function mouseup() {
+        //   if (m0) {
+        //     var m1 = mouse(d3.event),
+        //         dm = Math.atan2(cross(m0, m1), dot(m0, m1)) * 180 / Math.PI,
+        //         tx = "rotate3d(0,0,0,0deg)";
 
-            rotate += dm;
-            if (rotate > 360) rotate -= 360;
-            else if (rotate < 0) rotate += 360;
-            m0 = null;
+        //     rotate += dm;
+        //     if (rotate > 360) rotate -= 360;
+        //     else if (rotate < 0) rotate += 360;
+        //     m0 = null;
 
-            svg
-                .style("-moz-transform", tx)
-                .style("-ms-transform", tx)
-                .style("-webkit-transform", tx);
+        //     svg
+        //         .style("-moz-transform", tx)
+        //         .style("-ms-transform", tx)
+        //         .style("-webkit-transform", tx);
 
-            vis
-                .attr("transform", "translate(" + rx + "," + ry + ")rotate(" + rotate + ")")
-              .selectAll("g.node text")
-                .attr("dx", function(d) { return (d.x + rotate) % 360 < 180 ? 8 : -8; })
-                .attr("text-anchor", function(d) { return (d.x + rotate) % 360 < 180 ? "start" : "end"; })
-                .attr("transform", function(d) { return (d.x + rotate) % 360 < 180 ? null : "rotate(180)"; });
-          }
-        }
+        //     vis
+        //         .attr("transform", "translate(" + rx + "," + ry + ")rotate(" + rotate + ")")
+        //       .selectAll("g.node text")
+        //         .attr("dx", function(d) { return (d.x + rotate) % 360 < 180 ? 8 : -8; })
+        //         .attr("text-anchor", function(d) { return (d.x + rotate) % 360 < 180 ? "start" : "end"; })
+        //         .attr("transform", function(d) { return (d.x + rotate) % 360 < 180 ? null : "rotate(180)"; });
+        //   }
+        // }
 
-        function cross(a, b) {
-          return a[0] * b[1] - a[1] * b[0];
-        }
+        // function cross(a, b) {
+        //   return a[0] * b[1] - a[1] * b[0];
+        // }
 
-        function dot(a, b) {
-          return a[0] * b[0] + a[1] * b[1];
-        }
+        // function dot(a, b) {
+        //   return a[0] * b[0] + a[1] * b[1];
+        // }
 }
 
 
