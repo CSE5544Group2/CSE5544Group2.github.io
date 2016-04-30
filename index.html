@@ -8,128 +8,79 @@
     <script type="text/javascript" src="http://mbostock.github.io/d3/talk/20111018/packages.js"></script>
     <script type="text/javascript" src="data/listOfWords.js"></script>
     <link type="text/css" rel="stylesheet" href="http://mbostock.github.io/d3/talk/20111018/style.css"/>
+    <link type="text/css" rel="stylesheet" href="https://bootswatch.com/readable/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
+
     <style type="text/css">
-#left {
-        float:left;  
-        padding: 10px;  
-        font-family: arial;
-        font-size: 16px;
-        color: black;
-        font-weight: bold;
-        background-color: lightsteelblue ; 
-        border-radius: 5px;
-        height:800px; 
+    path.arc {
+    /*cursor: move;*/
+    fill: #fff;
     }
-
-#body{
-  float:left;
-  padding: 10px;
-}
-
-h1{
-  margin-left: 12px;
-  color: black;
-  font-weight: normal;
-  font-family: 'Ultra', sans-serif;   
-  font-size: 36px;
-  font-variant: small-caps;
-  border-bottom-color: black;
-  border-bottom-width: 2px;
-  border-bottom-style: solid;
-}
-textarea{
-  border-radius: 5px;
-
-}
-.graphButton{
-  float:right;
-  background: #3498db;
-  background-image: -webkit-linear-gradient(top, #3498db, #2980b9);
-  background-image: -moz-linear-gradient(top, #3498db, #2980b9);
-  background-image: -ms-linear-gradient(top, #3498db, #2980b9);
-  background-image: -o-linear-gradient(top, #3498db, #2980b9);
-  background-image: linear-gradient(to bottom, #3498db, #2980b9);
-  -webkit-border-radius: 28;
-  -moz-border-radius: 28;
-  border-radius: 28px;
-  font-family: verdana;
-  color: #ffffff;
-  font-size: 20px;
-  padding: 10px 20px 10px 20px;
-  text-decoration: none;
-  width: 100%;
-}
-.graphButton:hover {
-  background: #3cb0fd;
-  background-image: -webkit-linear-gradient(top, #3cb0fd, #3498db);
-  background-image: -moz-linear-gradient(top, #3cb0fd, #3498db);
-  background-image: -ms-linear-gradient(top, #3cb0fd, #3498db);
-  background-image: -o-linear-gradient(top, #3cb0fd, #3498db);
-  background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
-  text-decoration: none;
-}
-
-path.arc {
-  /*cursor: move;*/
-  fill: #fff;
-}
-
-.node circle {
-  fill: #fff;
-  stroke: steelblue;
-  stroke-width: 1.5px;
-}
-
-.node {
-  font-size: 10px;
-}
-
-.link {
-  fill: none;
-  stroke: #ccc;
-  stroke-width: 1.5px;
-}
-
-div.tooltip { 
-    position: absolute;     
-    text-align: center;     
-/*    width: 60px;          
-    height: 28px;  */       
-    padding: 2px;       
-    font: 12px sans-serif;    
-    background: lightsteelblue; 
-    border: 0px;    
-    border-radius: 8px;     
-    pointer-events: none;     
-}
-
+    .node circle {
+    fill: #fff;
+    stroke: steelblue;
+    stroke-width: 1.5px;
+    }
+    .node {
+    font-size: 10px;
+    }
+    .link {
+    fill: none;
+    stroke: #ccc;
+    stroke-width: 1.5px;
+    }
+    div.tooltip {
+    position: absolute;
+    text-align: center;
+    padding: 2px;
+    background: lightsteelblue;
+    border: 0px;
+    border-radius: 8px;
+    pointer-events: none;
+    }
+    #containerIntro h1,
+    #containerIntro h4 {
+      display:inline;
+    }
+    #containerIntro{
+      margin-top:15px;
+    }
     </style>
-  </head>
-  <body >
-    <div id="left">
-      <h1>Recipe Visualizer</h1>
-    <div>
-      Ingredients<br>
-      <textarea name="ingredients" id="ingredients" rows="10" cols="40">1 potato
-1 tbsp parsley</textarea>
+    </head>
+    <body>
+    <div id="containerIntro">
+      <h1 style="padding-left: 10px"><i class="fa fa-cutlery" aria-hidden="true"></i> Recipe Visualizer</h1><h4> - "[" and "]" to zoom in and out, arrow keys to control camera</h4>
     </div>
-    <div>
-      Recipe<br>
-      <textarea name = "steps" id = "steps" rows="15" cols="40">place potato in bowl
-add parsley
-mash</textarea>
-    </div><br>
-    <button class = "graphButton" name= "run" onClick="run()">Create Graph --></button><br>
-  </div>
-
-    <div id="body">
-      <div id="footer">
-        <div class="hint">
-        </div>
+    <hr>
+    <div id="left" class="col-xs-3">
+      <div>
+        <h4><i class="fa fa-envira" aria-hidden="true"></i> Ingredients</h4>
+        <textarea class="form-control" name="ingredients" id="ingredients" rows="10">2 large leeks (white and light green parts only), cleaned and thinly sliced
+1 pound diced butternut squash
+1/2 pound parsnips, peeled and diced
+1/2 pound carrots, sliced
+2/3 cup barley
+2 cloves garlic, sliced
+1 box (32 oz) vegetable broth
+1 can (14.5 oz) petite-cut diced tomatoes
+1 teaspoon fresh thyme, chopped
+1 box (10 oz) frozen corn, thawed
+1/2 cup heavy cream
+1/4 cup chopped parsley
+3/4 teaspoon salt
+1/4 teaspoon black pepper
+1/8 teaspoon cayenne pepper</textarea>
       </div>
+      <div><br>
+        <h4><i class="fa fa-list-ul" aria-hidden="true"></i> Recipe</h4>
+        <textarea class="form-control" name = "steps" id = "steps" rows="15" >Combine leeks, squash, parsnips, carrots, barley and garlic in slow cooker. Stir in broth, 4 cups water, tomatoes and thyme. Cover and cook on HIGH for 6 hours or LOW for 8 hours.
+Stir in corn, heavy cream, parsley, salt, black pepper and cayenne.</textarea>
+      </div>
+      <button type="submit" class="btn btn-primary btn-block" onClick="run()" style="margin-top: 10px">Create Graph</button>
+    </div>
+    <div id="body" class="col-xs-9">
     </div>
     <script type="text/javascript">
-
 function run(){
 
       var ingredients = document.getElementById('ingredients').value;
@@ -272,10 +223,10 @@ function buildTree(procedure){
 //});
 ///////////////////////////////////////////////////////////////////////////////////
 d3.select(".display").remove();
-        var w = 800,
-            h = 800,
-            rx = w / 2,
-            ry = h / 2,
+        var w = window.innerHeight-150,
+            h = window.innerHeight-150,
+            rx = (w-100) / 2,
+            ry = (h-100) / 2,
             m0,
             rotate = 0;
 
@@ -290,6 +241,49 @@ d3.select(".display").remove();
             .attr("class","display")
             .style("width", w + "px")
             .style("height", w + "px");
+
+var trX = w/2,
+trY = h/2, 
+sc =1;
+document.onkeydown = checkKey;
+function checkKey(e) {
+    e = e || window.event;
+    if (e.keyCode == '219') {
+        // [
+        sc+=0.1;
+        zoom(trX,trY,sc);
+    }
+    else if (e.keyCode == '221') {
+        // ]
+        sc-=0.1;
+        zoom(trX,trY,sc);
+    }
+    else if (e.keyCode == '37') {
+        // <-
+        trX+=50;
+        zoom(trX,trY,sc);
+    }
+    else if (e.keyCode == '38') {
+        // up
+        trY+=50;
+        zoom(trX,trY,sc);
+    }
+    else if (e.keyCode == '39') {
+        // ->
+        trX-=50;
+        zoom(trX,trY,sc);
+    }
+    else if (e.keyCode == '40') {
+        // ]
+        trY-=50;
+        zoom(trX,trY,sc);
+    }
+}
+
+        function zoom(x,y,scale) {
+          vis.attr("transform", "translate("+x+","+y+")scale("+scale+")");
+        }
+
 
         var vis = svg.append("svg:svg")
             .attr("width", w)
@@ -327,16 +321,19 @@ d3.select(".display").remove();
 		  .attr("transform", function(d) { return "rotate(" + (d.x - 90) + ")translate(" + d.y + ")"; })
       .on("mouseover", function(d) {
         if(isAgent(d.name)=="green"){
-          var API_KEY = 'AIzaSyB1VHokcxoK26xe4lMAbA4Wb4ellJLjXnk';
-          var CX = '006744095462602682148:5ne2bffwtoo';
-          var URL = "https://www.googleapis.com/customsearch/v1?key="+API_KEY+"&cx="+CX+"&q="+encodeURIComponent(d.name)+"&searchType=image&alt=json";
-          $.getJSON(URL, function(data){
-                div.transition()    
-                    .duration(200)    
-                    .style("opacity", .9);    
-                div .html(d.name + "<br><img src=\""+data.items[0].link+"\" width=200>");  
-          });
-
+          // var API_KEY = 'AIzaSyB1VHokcxoK26xe4lMAbA4Wb4ellJLjXnk';
+          // var CX = '006744095462602682148:5ne2bffwtoo';
+          // var URL = "https://www.googleapis.com/customsearch/v1?key="+API_KEY+"&cx="+CX+"&q="+encodeURIComponent(d.name)+"&searchType=image&alt=json";
+          // $.getJSON(URL, function(data){
+          //       div.transition()    
+          //           .duration(200)    
+          //           .style("opacity", .9);    
+          //       div .html("<p>"+d.name + "</p><br><img src=\""+data.items[0].link+"\" width=200>");  
+          // });
+              div.transition()    
+                  .duration(200)    
+                  .style("opacity", .9);    
+              div .html("<p>"+ d.name + "</p><br><p class=\"text-danger\">Google API daily quota - 100/day - reached. Please try tomorrow.</p>"); 
               div.style("left", 400 + mouse(d3.event)[0] + "px")   
                   .style("top", 400 + mouse(d3.event)[1] + "px");  
         }
