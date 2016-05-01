@@ -176,6 +176,10 @@ var WordList = {
       "wrap"
    ],
    "amounts":[
+      "box",
+      "boxes",
+      "can",
+      "cans",
       "cup",
       "cups",
       "gallon",
@@ -183,6 +187,7 @@ var WordList = {
       "handfuls",
       "ounce",
       "ounces",
+      "oz",
       "pint",
       "pints",
       "pound",
