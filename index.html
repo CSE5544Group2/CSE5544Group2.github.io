@@ -22,7 +22,7 @@
     stroke-width: 1.5px;
     }
     .node {
-    font-size: 10px;
+    font-size: 8px;
     }
     .link {
     fill: none;
@@ -55,7 +55,7 @@
     <div id="left" class="col-xs-3">
       <div>
         <h4><i class="fa fa-envira" aria-hidden="true"></i> Ingredients</h4>
-        <textarea class="form-control" name="ingredients" id="ingredients" rows="10">2 large leeks (white and light green parts only), cleaned and thinly sliced
+        <textarea class="form-control" name="ingredients" id="ingredients" rows="8">2 large leeks (white and light green parts only), cleaned and thinly sliced
 1 pound diced butternut squash
 1/2 pound parsnips, peeled and diced
 1/2 pound carrots, sliced
@@ -73,7 +73,7 @@
       </div>
       <div><br>
         <h4><i class="fa fa-list-ul" aria-hidden="true"></i> Recipe</h4>
-        <textarea class="form-control" name = "steps" id = "steps" rows="15" >Combine leeks, squash, parsnips, carrots, barley and garlic in slow cooker. Stir in broth, 4 cups water, tomatoes and thyme. Cover and cook on HIGH for 6 hours or LOW for 8 hours.
+        <textarea class="form-control" name = "steps" id = "steps" rows="8" >Combine leeks, squash, parsnips, carrots, barley and garlic in slow cooker. Stir in broth, 4 cups water, tomatoes and thyme. Cover and cook on HIGH for 6 hours or LOW for 8 hours.
 Stir in corn, heavy cream, parsley, salt, black pepper and cayenne.</textarea>
       </div>
       <button type="submit" class="btn btn-primary btn-block" onClick="run()" style="margin-top: 10px">Create Graph</button>
@@ -223,8 +223,8 @@ function buildTree(procedure){
 //});
 ///////////////////////////////////////////////////////////////////////////////////
 d3.select(".display").remove();
-        var w = window.innerHeight-150,
-            h = window.innerHeight-150,
+        var w = window.innerHeight,
+            h = window.innerHeight,
             rx = (w-100) / 2,
             ry = (h-100) / 2,
             m0,
@@ -333,7 +333,7 @@ function checkKey(e) {
               div.transition()    
                   .duration(200)    
                   .style("opacity", .9);    
-              div .html("<p>"+ d.name + "</p><br><p class=\"text-danger\">Google API daily quota - 100/day - reached. Please try tomorrow.</p>"); 
+              div .html("<p><b>"+ d.name + "</b>: "+listOfIngredients[d.name]+"</p><br><p class=\"text-danger\">Google API daily quota - 100/day - reached. Please try tomorrow.</p>"); 
               div.style("left", 400 + mouse(d3.event)[0] + "px")   
                   .style("top", 400 + mouse(d3.event)[1] + "px");  
         }
@@ -374,7 +374,7 @@ function checkKey(e) {
       .attr("font-size", "15px")
 		  .attr("text-anchor", function(d) { return d.x < 180 ? "start" : "end"; })
 		  .attr("transform", function(d) { return d.x < 180 ? null : "rotate(180)"; })
-		  .html(function(d) { return typeof listOfIngredients[d.name] === "undefined" ? d.name : d.name + " [" + listOfIngredients[d.name] + "]"; });
+		  .html(function(d) { return d.name; });//return typeof listOfIngredients[d.name] === "undefined" ? d.name : d.name + " [" + listOfIngredients[d.name] + "]"; });
 			//});
 
         // d3.select(window)
