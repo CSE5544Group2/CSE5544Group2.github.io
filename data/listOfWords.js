@@ -3,6 +3,7 @@ var WordList = {
       "baking sheet",
       "blender",
       "bowl",
+      "cooker",
       "fennel",
       "flame",
       "food processor",
